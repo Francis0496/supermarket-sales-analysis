@@ -14,6 +14,18 @@ statistical significance, and framed in dollar terms.
 
 ---
 
+## 📊 Dashboard Preview
+
+An interactive executive dashboard summarizing all **seven decisions** with evidence charts and
+significance testing. Open [`dashboard.html`](dashboard.html) for the live, interactive version
+(hover tooltips, light/dark theme).
+
+<p align="center">
+  <img src="docs/dashboard.png" alt="Interactive dashboard of the seven supermarket sales decisions" width="820">
+</p>
+
+---
+
 ## 🎯 Goals & Objectives
 
 **Primary goal:** convert raw transaction data into decisions a retail operator can act on Monday morning.
