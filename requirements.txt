@@ -1,0 +1,10 @@
+# Core analysis stack (versions this project was built & verified with)
+numpy>=1.26,<3
+pandas>=2.0
+matplotlib>=3.8
+seaborn>=0.13
+scipy>=1.11
+
+# Notebook environment + HTML export
+jupyter>=1.0
+nbconvert>=7.0

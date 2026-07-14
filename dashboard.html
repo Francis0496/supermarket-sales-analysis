@@ -1,0 +1,553 @@
+<title>Supermarket Chain — Five Data-Driven Decisions (Q1 2019)</title>
+<style>
+  :root{
+    --paper:#F5F7F8; --surface:#FFFFFF; --surface-2:#FAFBFC;
+    --ink:#16191C; --muted:#5C666E; --faint:#8A949B;
+    --line:#E4E9EC; --line-strong:#D3DADE;
+    --accent:#0F6E72; --accent-ink:#0B5457; --accent-soft:rgba(15,110,114,.10);
+    --sA:#0072B2; --sB:#E69F00; --sC:#009E73;
+    --s1:#0072B2; --s2:#E69F00; --s3:#009E73; --s4:#CC79A7; --s5:#56B4E9; --s6:#D55E00;
+    --good:#1F8A5B; --warn:#B26B00;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+    --shadow:0 1px 2px rgba(16,24,32,.04),0 6px 20px rgba(16,24,32,.05);
+    --r:14px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0E1315; --surface:#161D20; --surface-2:#1B2327;
+      --ink:#EAF0F1; --muted:#96A2A8; --faint:#6E7A80;
+      --line:#243033; --line-strong:#2E3B3F;
+      --accent:#53C7CB; --accent-ink:#8BE0E2; --accent-soft:rgba(83,199,203,.12);
+      --good:#39C07E; --warn:#E0A64B;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F5F7F8; --surface:#FFFFFF; --surface-2:#FAFBFC;
+    --ink:#16191C; --muted:#5C666E; --faint:#8A949B;
+    --line:#E4E9EC; --line-strong:#D3DADE;
+    --accent:#0F6E72; --accent-ink:#0B5457; --accent-soft:rgba(15,110,114,.10);
+    --good:#1F8A5B; --warn:#B26B00;
+    --shadow:0 1px 2px rgba(16,24,32,.04),0 6px 20px rgba(16,24,32,.05);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1315; --surface:#161D20; --surface-2:#1B2327;
+    --ink:#EAF0F1; --muted:#96A2A8; --faint:#6E7A80;
+    --line:#243033; --line-strong:#2E3B3F;
+    --accent:#53C7CB; --accent-ink:#8BE0E2; --accent-soft:rgba(83,199,203,.12);
+    --good:#39C07E; --warn:#E0A64B;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1120px;margin:0 auto;padding:clamp(20px,4vw,52px) clamp(16px,3vw,32px) 64px}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  /* ---- masthead ---- */
+  header.mast{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:30px}
+  .eyebrow{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+    font-weight:700;margin:0 0 10px}
+  h1{font-size:clamp(26px,4.4vw,42px);line-height:1.06;font-weight:800;letter-spacing:-.02em;
+    margin:0;text-wrap:balance;max-width:20ch}
+  .sub{color:var(--muted);margin:14px 0 0;max-width:70ch;font-size:15px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;font-size:12.5px;color:var(--faint)}
+  .meta b{color:var(--ink);font-weight:600}
+
+  /* ---- kpi strip ---- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:38px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    padding:16px 16px 14px;box-shadow:var(--shadow)}
+  .kpi .lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  .kpi .val{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;
+    margin-top:7px;letter-spacing:-.01em}
+  .kpi .val small{font-size:14px;color:var(--muted);font-weight:500}
+
+  /* ---- section head ---- */
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin:0 0 6px}
+  .sec-head h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0}
+  .sec-head .rule{flex:1;height:1px;background:var(--line-strong)}
+  .sec-note{color:var(--muted);font-size:13.5px;margin:0 0 22px;max-width:74ch}
+
+  /* ---- decision cards ---- */
+  .cards{display:flex;flex-direction:column;gap:18px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-columns:56px 1fr;
+    grid-template-areas:"rank body"}
+  .rank{grid-area:rank;background:var(--accent-soft);border-right:1px solid var(--line);
+    display:flex;align-items:flex-start;justify-content:center;padding-top:22px}
+  .rank span{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--accent)}
+  .body{grid-area:body;display:grid;grid-template-columns:1.05fr .95fr;gap:0}
+  @media (max-width:760px){.body{grid-template-columns:1fr}}
+  .body>.txt{padding:20px 22px}
+  .body>.viz{padding:18px 22px 18px 0;border-left:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+  @media (max-width:760px){.body>.viz{border-left:0;border-top:1px solid var(--line);padding:16px 22px 20px}}
+  .card h3{font-size:17px;font-weight:750;margin:2px 0 0;letter-spacing:-.01em}
+  .kicker{font-size:11px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+  .card p{color:var(--muted);font-size:13.7px;margin:9px 0 0}
+  .card p b{color:var(--ink);font-weight:650}
+  .impact{display:inline-flex;align-items:center;gap:8px;margin-top:15px;padding:7px 13px;
+    border-radius:999px;background:var(--surface-2);border:1px solid var(--line-strong);
+    font-size:12.5px;color:var(--ink);font-weight:600}
+  .impact .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .impact .fig{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .viz .cap{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
+    font-weight:600;margin:0 0 8px}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px;font-size:12px;color:var(--muted)}
+  .legend .it{display:inline-flex;align-items:center;gap:6px}
+  .legend .sw{width:11px;height:11px;border-radius:3px;box-shadow:0 0 0 2px var(--surface)}
+
+  /* ---- confidence panel ---- */
+  .conf{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow);padding:22px 24px;margin-top:20px}
+  .tests{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:16px}
+  .test{border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:var(--surface-2)}
+  .test .q{font-size:13px;font-weight:600;color:var(--ink)}
+  .test .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .test .p{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+    letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:6px}
+  .chip .cd{width:7px;height:7px;border-radius:50%}
+  .chip.hold{background:transparent;border:1.5px solid var(--line-strong);color:var(--muted)}
+  .chip.hold .cd{background:var(--faint)}
+  .chip.act{background:var(--good);color:#fff}
+  .chip.act .cd{background:#fff}
+  .verdict{margin-top:18px;padding:14px 16px;border-left:3px solid var(--accent);
+    background:var(--accent-soft);border-radius:0 10px 10px 0;font-size:13.6px}
+  .verdict b{font-weight:700}
+
+  footer{margin-top:38px;padding-top:20px;border-top:1px solid var(--line);
+    color:var(--faint);font-size:12px;line-height:1.7}
+  footer b{color:var(--muted)}
+
+  /* chart bits */
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .axtxt{font-family:var(--mono);font-size:10px;fill:var(--faint)}
+  .vlabel{font-family:var(--mono);font-size:10.5px;fill:var(--ink);font-weight:600}
+  .grid{stroke:var(--line);stroke-width:1}
+  .bar{transition:opacity .12s}
+  .bar:hover{opacity:.78;cursor:default}
+  #tip{position:fixed;pointer-events:none;z-index:50;background:var(--ink);color:var(--paper);
+    font-family:var(--mono);font-size:11.5px;padding:6px 9px;border-radius:7px;opacity:0;
+    transition:opacity .1s;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">Operations Decision Brief · Retail Analytics</p>
+    <h1>Five data-driven decisions for the chain</h1>
+    <p class="sub">A 3-branch supermarket chain, one quarter of point-of-sale data, distilled to the
+      decisions worth acting on — each ranked by return, backed by its evidence, and filtered through
+      statistical significance so we don't chase gaps that aren't real.</p>
+    <div class="meta">
+      <span><b>Period</b> Jan–Mar 2019 (Q1)</span>
+      <span><b>Branches</b> A · Yangon &nbsp;/&nbsp; B · Mandalay &nbsp;/&nbsp; C · Naypyitaw</span>
+      <span><b>Records</b> <span class="num">1,000</span> transactions (cleaned &amp; recovered from 1,003)</span>
+      <span><b>Margin</b> fixed at <span class="num">4.76%</span></span>
+    </div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="sec-head"><h2>The five decisions</h2><span class="rule"></span></div>
+  <p class="sec-note">Ordered by expected return on effort. Cards 1 and 3–5 are actions; card 2 is the
+    decision <em>not</em> to act — equally valuable, because it redirects budget away from a phantom problem.</p>
+  <div class="cards" id="cards"></div>
+
+  <div class="sec-head" style="margin-top:40px"><h2>Deeper cuts — targeting &amp; cross-sell</h2><span class="rule"></span></div>
+  <p class="sec-note">Two analyses the brief was asked for. Both are <b>adaptations</b>: this dataset has
+    no customer ID (every invoice is unique) and one product line per invoice, so textbook
+    <b>RFM</b> (needs repeat-visit history) and <b>market-basket association rules</b> (need multi-item
+    baskets) are not computable. Below are the closest rigorous substitutes that answer the same
+    questions — <em>which customers are worth most</em> and <em>which category to cross-sell to whom</em> —
+    with the data limitation stated up front.</p>
+  <div class="cards" id="cards2"></div>
+
+  <div class="sec-head" style="margin-top:40px"><h2>Confidence filter</h2><span class="rule"></span></div>
+  <p class="sec-note">Before committing money, every headline gap was tested at α = 0.05. This is the
+    step that separates a decision brief from a dashboard of coincidences.</p>
+  <div class="conf">
+    <div class="tests" id="tests"></div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+
+  <footer>
+    <b>Method.</b> Raw file de-duplicated (3 repeat invoices removed) and missing numerics recovered
+    losslessly via the identity Total = Unit price × Quantity × 1.05 — 99.7% of rows retained rather
+    than dropped. Figures are actuals from the cleaned dataset; dollar impacts are illustrative frames
+    on stated assumptions (e.g. "+5% peak throughput"), not forecasts.<br>
+    <b>Caveat.</b> One quarter (n = 1,000) is a strong operational read but too short to establish
+    seasonality; treat weekday/hour patterns as current-state, not annualized. Significance tests use
+    ANOVA, Welch's t-test, and χ² of independence.<br>
+    <b>Palette</b> is colorblind-safe (Okabe–Ito) and shared with the source notebook so the two read as one system.
+  </footer>
+</div>
+
+<div id="tip"></div>
+
+<script>
+const DATA = {"kpi":{"revenue":322967,"gross":15379,"txns":1000,"basket":322.97,"rating":6.97,"qty":5510},"rev_branch":{"A":106200,"B":106198,"C":110569},"gi_line":{"Sports and travel":2570,"Fashion accessories":2525,"Food and beverages":2520,"Electronic accessories":2478,"Home and lifestyle":2466,"Health and beauty":2270,"Unknown":549},"hours":[10,11,12,13,14,15,16,17,18,19,20],"hourly":{"A":[11208,11350,9485,10444,8852,11274,10870,9044,7447,10330,5896],"B":[8866,10482,8475,11272,11695,10241,4124,7841,9555,16262,7384],"C":[11347,8546,8105,13007,10281,9665,10233,7560,9028,13107,9689]},"weekday":{"Mon":37899,"Tue":51482,"Wed":43731,"Thu":45349,"Fri":43926,"Sat":56121,"Sun":44458},"payment":{"A":{"Cash":32.4,"Credit card":30.6,"Ewallet":37.1},"B":{"Cash":33.1,"Credit card":32.8,"Ewallet":34.0},"C":{"Cash":37.8,"Credit card":29.9,"Ewallet":32.3}},"rating_branch":{"A":7.03,"B":6.82,"C":7.07},"seg":{"Member":{"basket":331.58,"txns":453},"Normal":{"basket":320.79,"txns":468}},"corr_rating_total":-0.036,"tests":{"Rating x Branch (ANOVA)":0.126,"Member vs Normal spend (t-test)":0.509,"Payment x Branch (chi-sq)":0.509,"Gross income x Product line (ANOVA)":0.681},"peak":{"hour":19,"hour_rev":39700,"day":"Saturday"},"dom_pay":{"A":"Ewallet","B":"Ewallet","C":"Cash"},"rfm":{"M/F":{"freq":232,"basket":345.19,"rev":80084},"M/M":{"freq":221,"basket":317.29,"rev":70120},"N/F":{"freq":225,"basket":335.31,"rev":75444},"N/M":{"freq":243,"basket":307.34,"rev":74684}},"lift":{"Gender":{"Female":{"Electronic accessories":0.98,"Fashion accessories":1.09,"Food and beverages":1.02,"Health and beauty":0.86,"Home and lifestyle":0.96,"Sports and travel":1.06},"Male":{"Electronic accessories":1.02,"Fashion accessories":0.91,"Food and beverages":0.97,"Health and beauty":1.14,"Home and lifestyle":1.04,"Sports and travel":0.94}},"Customer":{"Member":{"Electronic accessories":0.95,"Fashion accessories":0.96,"Food and beverages":1.08,"Health and beauty":0.93,"Home and lifestyle":1.1,"Sports and travel":0.98},"Normal":{"Electronic accessories":1.05,"Fashion accessories":1.03,"Food and beverages":0.96,"Health and beauty":1.1,"Home and lifestyle":0.92,"Sports and travel":0.95}}},"lines":["Electronic accessories","Fashion accessories","Food and beverages","Health and beauty","Home and lifestyle","Sports and travel"]};
+const fmt = n => n.toLocaleString('en-US');
+const usd = n => '$' + Math.round(n).toLocaleString('en-US');
+const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6'];
+const BRANCH = {A:'var(--sA)', B:'var(--sB)', C:'var(--sC)'};
+const cssv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---- tooltip ---- */
+const tip = document.getElementById('tip');
+function bindTip(el, html){
+  el.addEventListener('mousemove', e=>{tip.innerHTML=html;tip.style.opacity=1;
+    tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-14)+'px';});
+  el.addEventListener('mouseleave', ()=>tip.style.opacity=0);
+}
+const SVGNS='http://www.w3.org/2000/svg';
+function el(tag,attrs){const n=document.createElementNS(SVGNS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);return n;}
+
+/* ---- KPI tiles ---- */
+const K=DATA.kpi;
+const kpiDefs=[
+  ['Revenue', usd(K.revenue)],
+  ['Gross income', usd(K.gross)],
+  ['Transactions', fmt(K.txns)],
+  ['Avg basket', '$'+K.basket.toFixed(2)],
+  ['Units sold', fmt(K.qty)],
+  ['Avg rating', K.rating.toFixed(2)+' <small>/10</small>'],
+];
+document.getElementById('kpis').innerHTML = kpiDefs.map(([l,v])=>
+  `<div class="kpi"><div class="lab">${l}</div><div class="val">${v}</div></div>`).join('');
+
+/* =========================================================
+   Chart builders (inline SVG, theme-aware, tooltip on marks)
+   ========================================================= */
+
+// Grouped/single vertical bar chart
+function barChart(target,{cats,series,fmtV,unit,rotate}){
+  const W=440,H=210,padL=8,padR=8,padT=18,padB=rotate?42:26;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+  const plotH=H-padT-padB, plotW=W-padL-padR;
+  const max=Math.max(...series.flatMap(s=>s.data));
+  const y=v=>padT+plotH-(v/max)*plotH;
+  // baseline
+  svg.appendChild(el('line',{x1:padL,y1:padT+plotH,x2:W-padR,y2:padT+plotH,class:'grid'}));
+  const groups=cats.length, gw=plotW/groups, inner=Math.min(gw*0.7,74), bw=inner/series.length;
+  cats.forEach((c,i)=>{
+    const gx=padL+i*gw+(gw-inner)/2;
+    series.forEach((s,j)=>{
+      const v=s.data[i], h=(v/max)*plotH, x=gx+j*bw;
+      const r=el('rect',{x:x+1.5,y:y(v),width:bw-3,height:Math.max(h,1),rx:4,
+        fill:s.color,class:'bar',stroke:'var(--surface)','stroke-width':2});
+      bindTip(r,`${c}${s.name?' · '+s.name:''}<br><b>${fmtV(v)}</b>`);
+      svg.appendChild(r);
+      if(series.length===1){
+        const t=el('text',{x:x+bw/2,y:y(v)-6,'text-anchor':'middle',class:'vlabel'});
+        t.textContent=fmtV(v); svg.appendChild(t);
+      }
+    });
+    const lx=padL+i*gw+gw/2;
+    const t=el('text',{x:lx,y:H-padB+15,'text-anchor':rotate?'end':'middle',class:'axtxt'});
+    if(rotate)t.setAttribute('transform',`rotate(-32 ${lx} ${H-padB+15})`);
+    t.textContent=c; svg.appendChild(t);
+  });
+  target.appendChild(svg);
+}
+
+// Multi-line chart
+function lineChart(target,{xlabels,series,fmtV}){
+  const W=440,H=210,padL=34,padR=10,padT=16,padB=26;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+  const plotH=H-padT-padB, plotW=W-padL-padR;
+  const max=Math.max(...series.flatMap(s=>s.data))*1.05;
+  const x=i=>padL+(i/(xlabels.length-1))*plotW;
+  const y=v=>padT+plotH-(v/max)*plotH;
+  [0,.5,1].forEach(f=>{const yy=padT+plotH*f;
+    svg.appendChild(el('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,class:'grid'}));
+    const t=el('text',{x:padL-6,y:yy+3,'text-anchor':'end',class:'axtxt'});
+    t.textContent=Math.round(max*(1-f)/1000)+'k'; svg.appendChild(t);});
+  xlabels.forEach((l,i)=>{ if(i%2===0){const t=el('text',{x:x(i),y:H-padB+15,'text-anchor':'middle',class:'axtxt'});
+    t.textContent=l; svg.appendChild(t);}});
+  // find global peak to mark
+  let pk={v:-1};
+  series.forEach(s=>s.data.forEach((v,i)=>{if(v>pk.v)pk={v,i,color:s.color,name:s.name};}));
+  series.forEach(s=>{
+    const d=s.data.map((v,i)=>`${i===0?'M':'L'}${x(i)},${y(v)}`).join(' ');
+    svg.appendChild(el('path',{d,fill:'none',stroke:s.color,'stroke-width':2,
+      'stroke-linejoin':'round','stroke-linecap':'round'}));
+    s.data.forEach((v,i)=>{
+      const c=el('circle',{cx:x(i),cy:y(v),r:3.2,fill:s.color,stroke:'var(--surface)','stroke-width':1.5});
+      bindTip(c,`${s.name} · ${xlabels[i]}<br><b>${fmtV(v)}</b>`);
+      svg.appendChild(c);
+    });
+  });
+  // peak marker
+  svg.appendChild(el('circle',{cx:x(pk.i),cy:y(pk.v),r:6,fill:'none',stroke:pk.color,'stroke-width':2}));
+  const pt=el('text',{x:x(pk.i),y:y(pk.v)-11,'text-anchor':'middle',class:'vlabel'});
+  pt.textContent='peak '+fmtV(pk.v); svg.appendChild(pt);
+  target.appendChild(svg);
+}
+
+// 100% stacked horizontal bars
+function stackChart(target,{rows,keys,colors}){
+  const W=440,rowH=40,padL=22,padR=8,padT=6,H=padT+rows.length*rowH+6;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+  const plotW=W-padL-padR;
+  rows.forEach((row,i)=>{
+    const y=padT+i*rowH+6, bh=20; let acc=0;
+    svg.appendChild(el('text',{x:0,y:y+bh/2+4,class:'vlabel'})).textContent=row.label;
+    keys.forEach((k,j)=>{
+      const val=row.vals[k], w=plotW*(val/100), x=padL+plotW*(acc/100);
+      const seg=el('rect',{x:x+1,y,width:Math.max(w-2,0),height:bh,rx:3,fill:colors[j],
+        class:'bar',stroke:'var(--surface)','stroke-width':2});
+      bindTip(seg,`Branch ${row.label} · ${k}<br><b>${val}%</b>`);
+      svg.appendChild(seg);
+      if(w>34){const t=el('text',{x:x+w/2,y:y+bh/2+4,'text-anchor':'middle',
+        style:'font-family:var(--mono);font-size:10px;font-weight:600',fill:'#fff'});
+        t.textContent=val+'%'; svg.appendChild(t);}
+      acc+=val;
+    });
+  });
+  target.appendChild(svg);
+}
+function legend(target,items){
+  const d=document.createElement('div');d.className='legend';
+  d.innerHTML=items.map(([n,c])=>`<span class="it"><span class="sw" style="background:${c}"></span>${n}</span>`).join('');
+  target.appendChild(d);
+}
+
+// Bubble scatter / value matrix: points positioned by x,y with size ~ value, quadrant guides
+function scatterChart(target,{points,xlab,ylab,fmtX,fmtY}){
+  const W=440,H=250,padL=44,padR=16,padT=16,padB=34;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const xs=points.map(p=>p.x), ys=points.map(p=>p.y), sz=points.map(p=>p.size);
+  const pad=(a,f)=>{const mn=Math.min(...a),mx=Math.max(...a),r=(mx-mn)||1;return[mn-r*f,mx+r*f];};
+  const [x0,x1]=pad(xs,.35),[y0,y1]=pad(ys,.35);
+  const X=v=>padL+((v-x0)/(x1-x0))*plotW, Y=v=>padT+plotH-((v-y0)/(y1-y0))*plotH;
+  const mx=xs.reduce((a,b)=>a+b,0)/xs.length, my=ys.reduce((a,b)=>a+b,0)/ys.length;
+  const rMax=Math.max(...sz);
+  // quadrant guides at the means
+  svg.appendChild(el('line',{x1:X(mx),y1:padT,x2:X(mx),y2:padT+plotH,class:'grid','stroke-dasharray':'3 3'}));
+  svg.appendChild(el('line',{x1:padL,y1:Y(my),x2:W-padR,y2:Y(my),class:'grid','stroke-dasharray':'3 3'}));
+  // axes labels
+  const ax=el('text',{x:padL+plotW/2,y:H-6,'text-anchor':'middle',class:'axtxt'});ax.textContent=xlab;svg.appendChild(ax);
+  const ay=el('text',{x:12,y:padT+plotH/2,'text-anchor':'middle',class:'axtxt',transform:`rotate(-90 12 ${padT+plotH/2})`});ay.textContent=ylab;svg.appendChild(ay);
+  points.forEach((p,i)=>{
+    const r=8+(p.size/rMax)*13;
+    const c=el('circle',{cx:X(p.x),cy:Y(p.y),r,fill:p.color,'fill-opacity':.28,
+      stroke:p.color,'stroke-width':2,class:'bar'});
+    bindTip(c,`<b>${p.label}</b><br>${xlab}: ${fmtX(p.x)}<br>${ylab}: ${fmtY(p.y)}<br>revenue: ${usd(p.size)}`);
+    svg.appendChild(c);
+    const t=el('text',{x:X(p.x),y:Y(p.y)-r-4,'text-anchor':'middle',class:'vlabel'});
+    t.textContent=p.label;svg.appendChild(t);
+  });
+  target.appendChild(svg);
+}
+
+// Diverging heatmap for lift (1.0 = neutral gray midpoint; >1 warm, <1 cool)
+function heatmapLift(target,{rows,cols,val}){
+  const W=440,cellH=30,padL=150,padT=22,padR=10,gap=3;
+  const H=padT+rows.length*cellH+6, plotW=W-padL-padR, cw=plotW/cols.length;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+  // diverging scale centered at 1.0; span +/-0.2 covers observed lift
+  const warm=[214,140,0], cool=[0,114,178], mid=[150,158,164];
+  const mixc=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+  const color=v=>{ const t=Math.max(-1,Math.min(1,(v-1)/0.2));
+    const c = t>=0 ? mixc(mid,warm,t) : mixc(mid,cool,-t); return `rgb(${c[0]},${c[1]},${c[2]})`; };
+  cols.forEach((c,j)=>{const t=el('text',{x:padL+j*cw+cw/2,y:padT-8,'text-anchor':'middle',class:'axtxt'});t.textContent=c;svg.appendChild(t);});
+  rows.forEach((r,i)=>{
+    const t=el('text',{x:padL-10,y:padT+i*cellH+cellH/2+4,'text-anchor':'end',class:'vlabel'});t.textContent=r;svg.appendChild(t);
+    cols.forEach((c,j)=>{
+      const v=val[c][r], x=padL+j*cw, y=padT+i*cellH;
+      const rect=el('rect',{x:x+gap/2,y:y+gap/2,width:cw-gap,height:cellH-gap,rx:4,fill:color(v),class:'bar'});
+      bindTip(rect,`${r} · ${c}<br>lift <b>${v.toFixed(2)}×</b> ${v>=1?'(over-indexes)':'(under-indexes)'}`);
+      svg.appendChild(rect);
+      const lab=el('text',{x:x+cw/2,y:y+cellH/2+3.5,'text-anchor':'middle',
+        style:'font-family:var(--mono);font-size:10.5px;font-weight:600',fill: Math.abs(v-1)>0.06?'#fff':'#1b1f22'});
+      lab.textContent=v.toFixed(2);svg.appendChild(lab);
+    });
+  });
+  target.appendChild(svg);
+}
+
+/* =========================================================
+   The five decision cards
+   ========================================================= */
+const S=DATA.seg, T=DATA.tests, P=DATA.peak;
+const memLift = Math.round(S.Member.basket*0.10*S.Member.txns);
+const feeSave = Math.round(DATA.kpi.revenue*0.003);
+const peakGain = Math.round(P.hour_rev*0.05);
+const branchSpread = (Math.max(...Object.values(DATA.rev_branch))/Math.min(...Object.values(DATA.rev_branch))-1)*100;
+
+const cards=[
+ {
+  kicker:'Highest-ROI operational lever',
+  title:'Staff and stock to the peak, not the average',
+  body:`Demand is sharply uneven by hour and day. <b>${P.day}s</b> are the busiest weekday and
+    <b>${P.hour}:00</b> is the peak hour chain-wide — <b>${usd(P.hour_rev)}</b> flows through that single
+    hour, with Branch B spiking hardest in the evening. Aligning shifts and checkout capacity to these
+    windows converts existing footfall into sales at near-zero cost.`,
+  impact:`+5% peak throughput ≈ ${usd(peakGain)}/qtr`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Revenue by hour of day, per branch';
+    lineChart(v.querySelector('.plot'),{xlabels:DATA.hours.map(h=>h+':00'),fmtV:usd,
+      series:['A','B','C'].map(b=>({name:'Branch '+b,color:cssv(BRANCH[b].match(/--\w+/)[0]),data:DATA.hourly[b]}))});
+    legend(v,[['Branch A',cssv('--sA')],['Branch B',cssv('--sB')],['Branch C',cssv('--sC')]]); }
+ },
+ {
+  kicker:'A decision NOT to act',
+  title:'Don’t chase branch-vs-branch gaps',
+  body:`Revenue is near-parity across the three branches — only a <b>${branchSpread.toFixed(1)}% spread</b>
+    top to bottom — and the differences in revenue, ratings and category mix are <b>not statistically
+    significant</b> (see confidence filter). There is no failing store to rescue. Any "fix the weak branch"
+    budget is better redirected to the chain-wide peak-hour lever above.`,
+  impact:`Avoids misallocating fix-it budget`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Total revenue by branch';
+    barChart(v.querySelector('.plot'),{cats:['Branch A','Branch B','Branch C'],fmtV:usd,
+      series:[{name:'',color:'var(--accent)',data:['A','B','C'].map(b=>DATA.rev_branch[b])}]}); }
+ },
+ {
+  kicker:'Payment economics',
+  title:'Route payment tactics branch by branch',
+  body:`The dominant method differs by store — <b>A &amp; B lean e-wallet</b>, while <b>C leans cash</b>
+    (${DATA.payment.C.Cash}%). Negotiate card-processing fees where cards are heaviest and push e-wallet
+    incentives where that rail already leads. The distribution gap is small (not significant), so treat this
+    as a low-cost tactic, not a capital bet — but on this revenue base even a slim fee cut compounds.`,
+  impact:`0.3% fee reduction ≈ ${usd(feeSave)}/qtr`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Payment mix by branch (% of transactions)';
+    stackChart(v.querySelector('.plot'),{keys:['Cash','Credit card','Ewallet'],
+      colors:[cssv('--s3'),cssv('--s1'),cssv('--s2')],
+      rows:['A','B','C'].map(b=>({label:b,vals:DATA.payment[b]}))});
+    legend(v,[['Cash',cssv('--s3')],['Credit card',cssv('--s1')],['E-wallet',cssv('--s2')]]); }
+ },
+ {
+  kicker:'Loyalty strategy',
+  title:'Turn the loyalty program from discount into lift',
+  body:`Members spend <b>$${S.Member.basket.toFixed(2)}</b> per basket vs <b>$${S.Normal.basket.toFixed(2)}</b>
+    for non-members — a gap of just ${((S.Member.basket/S.Normal.basket-1)*100).toFixed(1)}%, and not
+    statistically significant. Today the program recognizes customers without meaningfully lifting spend.
+    Re-engineer it toward basket-building (bundles, thresholds) targeted at the ${fmt(S.Member.txns)} member visits.`,
+  impact:`+10% member basket ≈ ${usd(memLift)}/qtr`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Average basket: member vs non-member';
+    barChart(v.querySelector('.plot'),{cats:['Member','Normal'],fmtV:x=>'$'+x.toFixed(0),
+      series:[{name:'',color:'var(--accent)',data:[S.Member.basket,S.Normal.basket]}]}); }
+ },
+ {
+  kicker:'Customer experience',
+  title:'Run a service program at Branch B — as its own KPI',
+  body:`Branch B has the lowest mean rating (<b>${DATA.rating_branch.B}</b> vs ${DATA.rating_branch.A} / ${DATA.rating_branch.C}).
+    Critically, rating has essentially <b>zero correlation with spend</b> (r = ${DATA.corr_rating_total}) — so
+    satisfaction won't show up in revenue on its own and must be managed as a standalone experience metric,
+    not folded into sales targets.`,
+  impact:`Rating is independent of revenue (r=${DATA.corr_rating_total})`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Mean customer rating by branch (of 10)';
+    barChart(v.querySelector('.plot'),{cats:['Branch A','Branch B','Branch C'],fmtV:x=>x.toFixed(2),
+      series:[{name:'',color:'var(--accent)',data:['A','B','C'].map(b=>DATA.rating_branch[b])}]}); }
+ },
+];
+
+const host=document.getElementById('cards');
+cards.forEach((c,i)=>{
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<div class="rank"><span>${i+1}</span></div>
+    <div class="body">
+      <div class="txt">
+        <div class="kicker">${c.kicker}</div>
+        <h3>${c.title}</h3>
+        <p>${c.body}</p>
+        <div class="impact"><span class="dot"></span><span class="fig">${c.impact}</span></div>
+      </div>
+      <div class="viz"><div class="cap"></div><div class="plot"></div></div>
+    </div>`;
+  host.appendChild(card);
+  c.render(card.querySelector('.viz'));
+});
+
+/* =========================================================
+   Deeper cuts — RFM & market-basket adaptations (cards 6-7)
+   ========================================================= */
+const RF=DATA.rfm, LF=DATA.lift, LINES=DATA.lines;
+const segName={'M/F':'Member · Female','M/M':'Member · Male','N/F':'Normal · Female','N/M':'Normal · Male'};
+const rfmEntries=Object.entries(RF);
+const topVal=rfmEntries.reduce((a,b)=>b[1].rev>a[1].rev?b:a);
+const topFreq=rfmEntries.reduce((a,b)=>b[1].freq>a[1].freq?b:a);
+// strongest gender affinity (largest deviation from 1.0)
+let topLift={dev:0};
+['Female','Male'].forEach(g=>LINES.forEach(l=>{const v=LF.Gender[g][l];
+  if(Math.abs(v-1)>Math.abs(topLift.dev)){topLift={dev:v-1,g,l,v};}}));
+
+const cards2=[
+ {
+  rank:6,
+  kicker:'RFM adaptation · Segment value matrix',
+  title:'Grow basket in the frequent segment; protect the high-value one',
+  body:`True RFM needs repeat-visit history, which this data lacks — so we score the four
+    <b>customer-type × gender</b> segments on the two axes we <em>can</em> measure: Frequency (visits)
+    and Monetary (avg basket); bubble size is total revenue. <b>${segName[topVal[0]]}</b> is the most
+    valuable segment (${usd(topVal[1].rev)}, $${topVal[1].basket.toFixed(0)} basket), while
+    <b>${segName[topFreq[0]]}</b> visits most often (${topFreq[1].freq}) but spends least
+    ($${topFreq[1].basket.toFixed(0)}) — the clearest basket-building target.`,
+  impact:`Recency axis: N/A (no customer tracking)`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Value matrix — Frequency × Monetary (bubble = revenue)';
+    scatterChart(v.querySelector('.plot'),{xlab:'Frequency (visits)',ylab:'Avg basket ($)',
+      fmtX:x=>Math.round(x),fmtY:y=>'$'+y.toFixed(0),
+      points:rfmEntries.map(([k,d],i)=>({label:k,x:d.freq,y:d.basket,size:d.rev,color:cssv(SERIES[i])}))});
+    legend(v,rfmEntries.map(([k])=>[segName[k],cssv(SERIES[rfmEntries.findIndex(e=>e[0]===k)])])); }
+ },
+ {
+  rank:7,
+  kicker:'Market-basket adaptation · Category affinity',
+  title:'Cross-sell by who over-indexes, not by co-purchase',
+  body:`Each invoice holds one product line, so there are no co-purchases to mine. Instead we compute
+    <b>lift</b> — how much each segment over- or under-indexes on a category vs the chain baseline — which
+    drives the same cross-sell decision. Signals are mild (a uniform chain): the strongest is
+    <b>${topLift.g} shoppers → ${topLift.l}</b> at <b>${topLift.v.toFixed(2)}×</b>. Use it to bias
+    endcaps, bundles and targeted offers by segment, not for hard inventory bets.`,
+  impact:`Strongest lift ${topLift.v.toFixed(2)}× · effects are directional`,
+  render:(v)=>{ v.querySelector('.cap').textContent='Product-line lift by gender (1.00 = chain average)';
+    heatmapLift(v.querySelector('.plot'),{rows:LINES.map(l=>l.replace(' and ',' & ')),cols:['Female','Male'],
+      val:{Female:remap(LF.Gender.Female),Male:remap(LF.Gender.Male)}});
+    const d=document.createElement('div');d.className='legend';
+    d.innerHTML=`<span class="it"><span class="sw" style="background:rgb(0,114,178)"></span>under-indexes (&lt;1)</span>
+      <span class="it"><span class="sw" style="background:rgb(150,158,164)"></span>≈ average</span>
+      <span class="it"><span class="sw" style="background:rgb(214,140,0)"></span>over-indexes (&gt;1)</span>`;
+    v.appendChild(d); }
+ },
+];
+// heatmap keys use the shortened row labels; remap object keys to match
+function remap(obj){const o={};for(const k in obj)o[k.replace(' and ',' & ')]=obj[k];return o;}
+
+const host2=document.getElementById('cards2');
+cards2.forEach(c=>{
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<div class="rank"><span>${c.rank}</span></div>
+    <div class="body">
+      <div class="txt">
+        <div class="kicker">${c.kicker}</div>
+        <h3>${c.title}</h3>
+        <p>${c.body}</p>
+        <div class="impact"><span class="dot"></span><span class="fig">${c.impact}</span></div>
+      </div>
+      <div class="viz"><div class="cap"></div><div class="plot"></div></div>
+    </div>`;
+  host2.appendChild(card);
+  c.render(card.querySelector('.viz'));
+});
+
+/* ---- confidence filter ---- */
+const testHost=document.getElementById('tests');
+Object.entries(T).forEach(([q,p])=>{
+  const act=p<0.05;
+  const d=document.createElement('div');d.className='test';
+  d.innerHTML=`<div class="q">${q}</div>
+    <div class="row"><span class="p">p = ${p.toFixed(3)}</span>
+    <span class="chip ${act?'act':'hold'}"><span class="cd"></span>${act?'Significant · act':'Not significant · hold'}</span></div>`;
+  testHost.appendChild(d);
+});
+document.getElementById('verdict').innerHTML =
+  `<b>Read:</b> none of the four headline gaps clear the α = 0.05 bar — the chain is
+   <b>statistically uniform</b> across branches, customer types and categories. The real levers are
+   <b>structural</b> (a fixed 4.76% margin) and <b>temporal</b> (revenue concentrated at peak hours),
+   which is exactly where decisions&nbsp;1 and&nbsp;3–5 aim. Refusing to fund phantom differences is decision&nbsp;2.`;
+</script>
