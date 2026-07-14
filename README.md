@@ -61,6 +61,10 @@ significance testing. Open [`dashboard.html`](dashboard.html) for the live, inte
 handled. Missing `Quantity`/`Unit price` were **recovered losslessly** using the exact identity
 `Total = Unit price × Quantity × 1.05`, retaining **99.7%** of rows (1,003 → 1,000) instead of dropping them.
 
+> 📎 **`supermarket_sales.csv` in this repo is the RAW, as-delivered file** — all **1,003 rows** with the
+> duplicates and missing values left intact. Nothing is pre-cleaned: the cleaning happens entirely inside
+> `supermarket.ipynb` (Stage 0), so you can reproduce the full before → after yourself.
+
 ---
 
 ## 🧭 Analytical Workflow
