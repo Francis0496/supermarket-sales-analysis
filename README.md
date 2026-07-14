@@ -152,6 +152,12 @@ read as one visual system.
 
 ## 📌 Author
 
-Analysis by **[your name]** · `sesay.f@northeastern.edu`
+**Francis Sesay** · `sesay.f@northeastern.edu`
+Best Graduating Student, Faculty of Information Systems and Technology
+University of Sierra Leone — Institute of Public Administration and Management (IPAM)
 
 *Feel free to open an issue or PR with suggestions.*
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
