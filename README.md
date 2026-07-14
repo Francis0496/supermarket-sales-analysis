@@ -63,7 +63,9 @@ handled. Missing `Quantity`/`Unit price` were **recovered losslessly** using the
 
 > 📎 **`supermarket_sales.csv` in this repo is the RAW, as-delivered file** — all **1,003 rows** with the
 > duplicates and missing values left intact. Nothing is pre-cleaned: the cleaning happens entirely inside
-> `supermarket.ipynb` (Stage 0), so you can reproduce the full before → after yourself.
+> `supermarket.ipynb` (Stage 0), so you can reproduce the full before → after yourself. The Stage 0 output
+> is also saved as **`supermarket_clean.csv`** (1,000 rows, 0 missing, 0 duplicates) — download both to
+> diff raw vs cleaned side by side.
 
 ---
 
@@ -109,7 +111,8 @@ handled. Missing `Quantity`/`Unit price` were **recovered losslessly** using the
 
 ```
 SUPERMARKET/
-├── supermarket_sales.csv       # Raw dataset (input)
+├── supermarket_sales.csv       # RAW dataset (input) — 1,003 rows, uncleaned
+├── supermarket_clean.csv       # CLEANED dataset (Stage 0 output) — 1,000 rows, 0 missing
 ├── supermarket.ipynb           # Main analysis notebook (EDA + Stages 0–6)
 ├── supermarket_report.html     # Static, self-contained report (executed notebook)
 ├── supermarket_report.pdf      # Portable/printable version of the report
