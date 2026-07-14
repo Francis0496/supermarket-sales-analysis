@@ -16,12 +16,16 @@ statistical significance, and framed in dollar terms.
 
 ## 📊 Dashboard Preview
 
+**🔗 Live dashboard:** **[francis0496.github.io/supermarket-sales-analysis](https://francis0496.github.io/supermarket-sales-analysis/)**
+
 An interactive executive dashboard summarizing all **seven decisions** with evidence charts and
-significance testing. Open [`dashboard.html`](dashboard.html) for the live, interactive version
-(hover tooltips, light/dark theme).
+significance testing (hover tooltips, light/dark theme). Click the image below to open it live, or run
+[`dashboard.html`](dashboard.html) locally.
 
 <p align="center">
-  <img src="docs/dashboard.png" alt="Interactive dashboard of the seven supermarket sales decisions" width="820">
+  <a href="https://francis0496.github.io/supermarket-sales-analysis/">
+    <img src="docs/dashboard.png" alt="Interactive dashboard of the seven supermarket sales decisions" width="820">
+  </a>
 </p>
 
 ---
