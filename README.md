@@ -1,5 +1,9 @@
 # 🛒 Supermarket Sales — From Exploration to Data-Driven Decisions
 
+> *A Python data-analysis project that cleans and recovers supermarket sales data, then climbs the
+> analytics ladder (descriptive → diagnostic → segmentation → significance testing → decisions) to
+> deliver 7 ranked, evidence-backed business recommendations — with an interactive dashboard and static report.*
+
 An end-to-end retail analytics project that turns **one quarter of point-of-sale data** into a set of
 **ranked, evidence-backed business decisions** — each supported by its data, stress-tested for
 statistical significance, and framed in dollar terms.
